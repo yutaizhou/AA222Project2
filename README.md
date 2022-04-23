@@ -2,17 +2,11 @@
 
 ## Code overview
 - `language.txt` is a text file specifying the programming language in which the assignment is completed. *This is the very first thing you should edit*
-- `project2_py` is a folder with starter code for completing the project in python
-    - `project2_py/project2.py` contains the function `optimize` in which your code must be written.
-    - `project2_py/helpers.py` contains optimization problems, random search, and test functions.
 - `project2_jl` is a folder with starter code for completing the project in Julia.
     - `project2_jl/project2.jl` contains the function `optimize` in which your code must be written.
     - `project2_jl/helpers.jl` contains optimization problems, random search, and test functions.
-- `localtest.py` runs tests on `project2_py`
 - `localtest.jl` runs tests on `project2_jl`
 - `make_submission.sh` is a shell script which will create a zip file for submission to gradescope (Unix).
-- `make_submission_gitbash.sh` is a shell script which will create a zip file for submission to gradescope (Windows GitBash).
-- `make_submission.bat` is a batch script to create a zip file for submission to gradescope (Windows Command Prompt)
 
 
 ## Rules

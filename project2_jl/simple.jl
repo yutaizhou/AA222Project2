@@ -1,5 +1,6 @@
 ########### "Simple" Problem Definitons ###########
 
+#* SIMPLE 1
 @counted function simple1(x::Vector)
     return -x[1] * x[2] + 2.0 / (3.0 * sqrt(3.0))
 end
@@ -17,6 +18,7 @@ function simple1_init()
     return rand(2) * 2.0
 end
 
+#* SIMPLE 2
 @counted function simple2(x::Vector)
     return (1.0 - x[1])^2 + 100.0 * (x[2] - x[1]^2)^2
 end
@@ -37,6 +39,7 @@ function simple2_init()
     return rand(2) .* 2.0 .- 1.0
 end
 
+#* SIMPLE 3
 @counted function simple3(x::Vector)
     return x[1] - 2*x[2] + x[3] + sqrt(6.0)
 end
