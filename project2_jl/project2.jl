@@ -25,6 +25,9 @@ using LinearAlgebra
 
 # Example
 # include("myfile.jl")
+include("algo_zeroth_order.jl")
+include("algo_penalty_barrier.jl")
+include("algo_simplex.jl")
 
 
 """
@@ -41,7 +44,38 @@ Arguments:
 Returns:
     - The location of the minimum
 """
-function optimize(f, g, c, x0, n, prob)
-    x_best = x0
-    return x_best
+function optimize(f, ∇f, c, x0, n, prob_name)
+    if prob_name == "simple10" #todo 20K - needs major work
+        method = HookeJeevesDynamic(α=0.3, γ=0.3)
+        penalties = [penalty_l0, penalty_l2]
+        weights = [1.5, 1.75]
+        multipliers = [2.0, 2.0]
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, n; weights=weights, multipliers=multipliers)    
+        return x
+    elseif prob_name == "simple2" #todo 45.29 - could do better
+        method = HookeJeevesDynamic(α=0.3, γ=0.3)
+        barrier = barrier_inverse
+        weight = 2.0
+        multiplier = 2
+        x = barrier_method(method, f, ∇f, c, barrier, x0, n; weight=weight, multiplier=multiplier)
+        return x
+    elseif prob_name == "simple3" #todo 0.173 - could do better
+        method = HookeJeevesDynamic(α=0.3, γ=0.3)
+        barrier = barrier_log
+        weight = 2.0
+        multiplier = 2
+        x = barrier_method(method, f, ∇f, c, barrier, x0, n; weight=weight, multiplier=multiplier)
+        return x
+    elseif prob_name == "secret1" #todo 1.44 - could do better
+
+    elseif prob_name == "secret2"
+        
+    end
+
+    method = HookeJeevesDynamic(α=0.3, γ=0.3)
+    barrier = barrier_log
+    weight = 2.0
+    multiplier = 2
+    x = barrier_method(method, f, ∇f, c, barrier, x0, 10; weight=weight, multiplier=multiplier)
+    return x
 end
