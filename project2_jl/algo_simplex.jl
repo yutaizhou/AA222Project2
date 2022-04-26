@@ -110,7 +110,7 @@ function simplex_solve(LP)
     # Find the initial parition
     m, n = size(A)
     z = ones(m)
-    Z = Matrix(Diagonal([j ≥ 0 ? 1: -1 for j in b]))
+    Z = Matrix(Diagonal([j ≥ 0 ? 1 : -1 for j in b]))
 
     A′ = hcat(A,Z)
     b′ = b
@@ -125,7 +125,7 @@ function simplex_solve(LP)
     end
 
     # Use the intial parition
-    A′′ = [A,          Matrix(1.0I, m, m);
+    A′′ = [A          Matrix(1.0I, m, m);
           zeros(m,n)  Matrix(1.0I, m, m)]
     b′′ = vcat(b, zeros(m))
     c′′ = c′
