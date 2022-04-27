@@ -1,3 +1,4 @@
+using Distributions
 include("helpers.jl")
 
 # Hooke Jeeves Dynamic w/ Eager execution
@@ -52,6 +53,63 @@ function solve(M::HookeJeevesDynamic, f, x, max_iters; num_eval_termination=true
         if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
             break
         end
+    end
+    return x, x_hist
+end
+
+#* Cross Entropy
+Base.@kwdef mutable struct CEM <: ZerothOrder
+    pop_size = 100
+    elite_size = 10
+    d = nothing # sample dimension
+    P = nothing # proposal distribution
+
+    evals_per_iter = pop_size
+end
+function init!(M::CEM, x; P = nothing)
+    d = length(x)
+    M.d = d
+
+    if P === nothing
+        # μ = copy(x)
+        # Σ = Matrix(2I,d,d)
+        # μ = [2/3, 1/√3]
+        μ = [0, 0]
+        Σ = [
+            1.0 0.2
+            0.2 2.0
+        ]
+        M.P = MvNormal(μ, Σ)
+    else
+        M.P = P
+    end
+
+    return M
+end
+
+function step!(M::CEM, f)
+    P, pop_size, elite_size = M.P, M.pop_size, M.elite_size
+
+    population = rand(P, pop_size)
+    performance = [f(population[:,i]) for i in 1:pop_size]
+    order = sortperm(performance)
+    elites = population[:, order[1:elite_size]]  
+    M.P = fit(typeof(P), elites)
+
+    return M.P.μ
+end
+
+function solve!(M::CEM, f, x, max_iters; P = nothing, num_eval_termination = false)
+    init!(M, x; P=P)
+
+    x_hist = [x]
+    for _ in max_iters
+        x = step!(M, f)
+        push!(x_hist, x)
+
+        # if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
+        #     break
+        # end
     end
     return x, x_hist
 end

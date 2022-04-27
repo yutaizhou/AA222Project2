@@ -13,6 +13,7 @@
 
 # Example:
 using LinearAlgebra
+using Distributions
 
 #=
     If you're going to include files, please do so up here. Note that they
@@ -72,10 +73,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         
     end
 
-    method = HookeJeevesDynamic(α=0.3, γ=0.3)
-    barrier = barrier_log
-    weight = 2.0
-    multiplier = 2
-    x = barrier_method(method, f, ∇f, c, barrier, x0, 10; weight=weight, multiplier=multiplier)
+    method = CEM(pop_size = 40, elite_size = 10)
+    x, _ = solve!(method, f, x0, 90; num_eval_termination=true)
     return x
 end
