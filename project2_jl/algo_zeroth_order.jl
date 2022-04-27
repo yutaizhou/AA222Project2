@@ -1,3 +1,4 @@
+using LinearAlgebra
 using Distributions
 include("helpers.jl")
 
@@ -72,18 +73,13 @@ function init!(M::CEM, x; P = nothing)
 
     if P === nothing
         # μ = copy(x)
-        # Σ = Matrix(2I,d,d)
-        # μ = [2/3, 1/√3]
-        μ = [0, 0]
-        Σ = [
-            1.0 0.2
-            0.2 2.0
-        ]
-        M.P = MvNormal(μ, Σ)
-    else
-        M.P = P
-    end
+        μ = zeros(d)
+        Σ = 0.2 * ones(d,d)
+        Σ[diagind(Σ)] .= 1 
 
+        P = MvNormal(μ, Σ)
+    end
+    M.P = P
     return M
 end
 
