@@ -41,7 +41,7 @@ function step!(M::HookeJeevesDynamic, f, x, y, idx_best_prev)
     return x_best, y_best, terminate, idx_best
 end
 
-function solve(M::HookeJeevesDynamic, f, x, max_iters; num_eval_termination=true)
+function solve!(M::HookeJeevesDynamic, f, x, max_iters; num_eval_termination=true)
     init!(M, x)
     x_hist = [x]
     y, terminate, idx_best = f(x), false, 1
