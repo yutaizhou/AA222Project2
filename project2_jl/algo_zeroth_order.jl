@@ -50,9 +50,9 @@ function solve(M::HookeJeevesDynamic, f, x, max_iters; num_eval_termination=true
         x, y, terminate, idx_best = step!(M, f, x, y, idx_best)
         push!(x_hist, x)
 
-        if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
-            break
-        end
+        # if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
+        #     break
+        # end
     end
     return x, x_hist
 end

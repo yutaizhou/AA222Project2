@@ -46,34 +46,43 @@ Returns:
     - The location of the minimum
 """
 function optimize(f, ∇f, c, x0, n, prob_name)
-    if prob_name == "simple10" #todo 20K - needs major work
-        method = HookeJeevesDynamic(α=0.3, γ=0.3)
+    if prob_name == "simple1" #* 0.0645 - rank 7
+        method = HookeJeevesDynamic(α=0.4, γ=0.3)
         penalties = [penalty_l0, penalty_l2]
-        weights = [1.5, 1.75]
+        weights = [1.5, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, n; weights=weights, multipliers=multipliers)    
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 15, 15; weights=weights, multipliers=multipliers)        
+
         return x
-    elseif prob_name == "simple2" #todo 45.29 - could do better
+    elseif prob_name == "simple2" #* 45.29 - rank 19 do better
         method = HookeJeevesDynamic(α=0.3, γ=0.3)
         barrier = barrier_inverse
         weight = 2.0
         multiplier = 2
         x = barrier_method(method, f, ∇f, c, barrier, x0, n; weight=weight, multiplier=multiplier)
         return x
-    elseif prob_name == "simple3" #todo 0.173 - could do better
+    elseif prob_name == "simple3" #* 0.173 - rank 10
         method = HookeJeevesDynamic(α=0.3, γ=0.3)
-        barrier = barrier_log
-        weight = 2.0
-        multiplier = 2
-        x = barrier_method(method, f, ∇f, c, barrier, x0, n; weight=weight, multiplier=multiplier)
+        penalties = [penalty_l0, penalty_l2]
+        weights = [1.75, 1.75]
+        multipliers = [2.0, 2.0]
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, n; weights=weights, multipliers=multipliers)    
         return x
-    elseif prob_name == "secret1" #todo 1.44 - could do better
-
+    elseif prob_name == "secret1" #* 0.1439 - rank 9
+        method = CEM(pop_size = 40, elite_size = 10)
+        x, _ = solve!(method, f, x0, 90; num_eval_termination=true)
+        #todo ???? try it with penalty!
+    
     elseif prob_name == "secret2"
         
     end
 
-    method = CEM(pop_size = 40, elite_size = 10)
-    x, _ = solve!(method, f, x0, 90; num_eval_termination=true)
+
+    method = HookeJeevesDynamic(α=0.3, γ=0.3)
+    barrier = barrier_inverse
+    weight = 2.0
+    multiplier = 2
+    x = barrier_method(method, f, ∇f, c, barrier, x0, 20; weight=weight, multiplier=multiplier)
+    
     return x
 end
