@@ -46,40 +46,45 @@ Returns:
     - The location of the minimum
 """
 function optimize(f, ∇f, c, x0, n, prob_name)
-    if prob_name == "simple1" #* 0.0645 - rank 7
+    if prob_name == "simple1"
         method = HookeJeevesDynamic(α=0.4, γ=0.3)
         penalties = [penalty_l0, penalty_l2]
         weights = [1.5, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 15, 15; weights=weights, multipliers=multipliers)
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 15, "_"; weights=weights, multipliers=multipliers)
         return x
 
-    elseif prob_name == "simple2" #* 45.29 - rank 19 do better
-        method = HookeJeevesDynamic(α=0.3, γ=0.3)
-        barrier = barrier_inverse
-        weight = 2.0
-        multiplier = 2
-        x = barrier_method(method, f, ∇f, c, barrier, x0, n; weight=weight, multiplier=multiplier)
+    elseif prob_name == "simple2"
+        method = HookeJeevesDynamic(α=1.0, γ=0.5, ϵ=5e-1)
+        penalties = [penalty_l0, penalty_l2]
+        weights = [2.0, 2.0]
+        multipliers = [2.0, 2.0]
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 10, "_"; weights=weights, multipliers=multipliers)
         return x
 
-    elseif prob_name == "simple3" #* 0.173 - rank 10
+    elseif prob_name == "simple3"
         method = HookeJeevesDynamic(α=0.3, γ=0.3)
         penalties = [penalty_l0, penalty_l2]
-        weights = [1.75, 1.75]
+        weights = [2.0, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, n; weights=weights, multipliers=multipliers)    
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, "_"; weights=weights, multipliers=multipliers)    
         return x
 
-    elseif prob_name == "secret1" #* 0.1207 - rank 10
-        method = CEM(pop_size = 40, elite_size = 10)
+    elseif prob_name == "secret1"
+        method = HookeJeevesDynamic(α=6.0, γ=0.5, ϵ=5e-3)
         penalties = [penalty_l0, penalty_l2]
-        weights = [1.75, 1.75]
+        weights = [4.0, 4.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, n; weights=weights, multipliers=multipliers)    
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
         return x
+
     
     elseif prob_name == "secret2"
-        
+        method = HookeJeevesDynamic(α=6.0, γ=0.5, ϵ=5e-3)
+        penalties = [penalty_l0, penalty_l2]
+        weights = [4.0, 4.0]
+        multipliers = [2.0, 2.0]
+        x = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
+        return x
     end
-
 end

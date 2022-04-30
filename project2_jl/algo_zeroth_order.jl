@@ -2,18 +2,26 @@ using LinearAlgebra
 using Distributions
 include("helpers.jl")
 
-# Hooke Jeeves Dynamic w/ Eager execution
 basis(i, n) = [k == i ? 1.0 : 0.0 for k in 1:n]
 abstract type ZerothOrder end
+# Hooke Jeeves Dynamic w/ Eager execution
 Base.@kwdef mutable struct HookeJeevesDynamic <: ZerothOrder
     α = 1e-2
     ϵ = 1e-4
     γ = 0.5
+
+    α₀ = α # need to reset the hyperparameters if used as a subroutine to penalty/barrier methods
+    ϵ₀ = ϵ
+    γ₀ = γ
     n = nothing
     evals_per_iter = nothing
     D = nothing # directions to search in, need to store it for permutating order
 end
 function init!(M::HookeJeevesDynamic, x)
+    M.α = M.α₀
+    M.ϵ = M.ϵ₀
+    M.γ = M.γ₀
+
     M.n = length(x)
     M.evals_per_iter = 2 * M.n
     M.D = [sgn * basis(i, M.n) for i in 1:M.n for sgn in (-1, +1)]
@@ -46,14 +54,9 @@ function solve!(M::HookeJeevesDynamic, f, x, max_iters; num_eval_termination=tru
     init!(M, x)
     x_hist = [x]
     y, terminate, idx_best = f(x), false, 1
-
     while !terminate
         x, y, terminate, idx_best = step!(M, f, x, y, idx_best)
         push!(x_hist, x)
-
-        # if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
-        #     break
-        # end
     end
     return x, x_hist
 end
@@ -71,15 +74,15 @@ function init!(M::CEM, x; P = nothing)
     d = length(x)
     M.d = d
 
-    if P === nothing
+    if P === nothing && M.P === nothing
         # μ = copy(x)
         μ = zeros(d)
         Σ = 0.2 * ones(d,d)
         Σ[diagind(Σ)] .= 1 
 
         P = MvNormal(μ, Σ)
+        M.P = P
     end
-    M.P = P
     return M
 end
 
@@ -99,13 +102,9 @@ function solve!(M::CEM, f, x, max_iters; P = nothing, num_eval_termination = fal
     init!(M, x; P=P)
 
     x_hist = [x]
-    for _ in max_iters
+    for _ in 1:max_iters
         x = step!(M, f)
         push!(x_hist, x)
-
-        # if num_eval_termination && (count(f) >= max_iters - M.evals_per_iter)
-        #     break
-        # end
     end
     return x, x_hist
 end
