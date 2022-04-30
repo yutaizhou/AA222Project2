@@ -5,17 +5,19 @@ include("helpers.jl")
 Encourage infeasible solutions to go towards feasible set
 """
 function penalty_method(M, f, ∇f, c, penalties, x, outer_max_iters, inner_max_iters; num_eval_termination = true, weights=[1.0], multipliers=[2.0])
+    x_hist = []
     for i in 1:outer_max_iters
         unconstrained_form = x -> f(x) + sum(weight * fn(x,c) for (fn, weight) in zip(penalties, weights))
-        x, _ = solve!(M, unconstrained_form, x, inner_max_iters)
+        x, x_hist_inner = solve!(M, unconstrained_form, x, inner_max_iters)
         weights .*= multipliers
 
+        append!(x_hist, x_hist_inner)
         if penalties[1](x, c) == 0 # this assumes the first penalty function is count-based penalty
-            return x
+            break
         end
-
+        (i < outer_max_iters) && pop!(x_hist)
     end
-    return x
+    return x, x_hist
 end
 
 penalty_l0(x, c) = sum(c(x) .> 0)

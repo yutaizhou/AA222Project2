@@ -4,7 +4,7 @@ include("helpers.jl")
 
 basis(i, n) = [k == i ? 1.0 : 0.0 for k in 1:n]
 abstract type ZerothOrder end
-# Hooke Jeeves Dynamic w/ Eager execution
+#* Hooke Jeeves Dynamic w/ Eager execution
 Base.@kwdef mutable struct HookeJeevesDynamic <: ZerothOrder
     α = 1e-2
     ϵ = 1e-4
@@ -75,8 +75,8 @@ function init!(M::CEM, x; P = nothing)
     M.d = d
 
     if P === nothing && M.P === nothing
-        # μ = copy(x)
-        μ = zeros(d)
+        μ = copy(x)
+        # μ = zeros(d)
         Σ = 0.2 * ones(d,d)
         Σ[diagind(Σ)] .= 1 
 

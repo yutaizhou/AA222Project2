@@ -51,7 +51,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         penalties = [penalty_l0, penalty_l2]
         weights = [1.5, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 15, "_"; weights=weights, multipliers=multipliers)
+        x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 15, "_"; weights=weights, multipliers=multipliers)
         return x
 
     elseif prob_name == "simple2"
@@ -59,7 +59,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         penalties = [penalty_l0, penalty_l2]
         weights = [2.0, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 10, "_"; weights=weights, multipliers=multipliers)
+        x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 10, "_"; weights=weights, multipliers=multipliers)
         return x
 
     elseif prob_name == "simple3"
@@ -67,7 +67,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         penalties = [penalty_l0, penalty_l2]
         weights = [2.0, 2.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 20, "_"; weights=weights, multipliers=multipliers)    
+        x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 20, "_"; weights=weights, multipliers=multipliers)    
         return x
 
     elseif prob_name == "secret1"
@@ -75,7 +75,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         penalties = [penalty_l0, penalty_l2]
         weights = [4.0, 4.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
+        x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
         return x
 
     
@@ -84,7 +84,7 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         penalties = [penalty_l0, penalty_l2]
         weights = [4.0, 4.0]
         multipliers = [2.0, 2.0]
-        x = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
+        x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 4, "_"; weights=weights, multipliers=multipliers)
         return x
     end
 end
