@@ -7,7 +7,10 @@ Base.@kwdef mutable struct LinearProgram
 end
 
 """
-B: partition
+Construct a vertex using the partition 
+Done by extracting design variable components corresponding to current partition:
+
+B: partition containing m indices corresponding to nonnegative elements of x
 LP: Linear program in equality form
 """
 function get_vertex(B, LP)
@@ -24,6 +27,10 @@ function get_vertex(B, LP)
 end
 
 """
+Edge Transition!
+Compute leaving index p & new coordinate xq` by increasing index q of vertex
+Entering index with some heuristics, Leaving index p with min ratio test
+
 B: partition
 LP: Linear program in equality form
 q: entering index
@@ -36,7 +43,8 @@ function edge_transition(LP, B, q)
     n_idc = sort!(setdiff(1:n, B))
 
     Aᵦ = A[:, B_idc]
-    Aq = A[:, n_idc[q]]    
+    Aq = A[:, n_idc[q]]
+    
     d = Aᵦ \ Aq
     xᵦ = Aᵦ \ b
 
@@ -94,7 +102,9 @@ function simplex_step!(B, LP)
     return (B, false) # new vertex but not optimal
 end
 
-# Simplex solver when initial partition is known
+"""
+Simplex solver when initial partition is known
+"""
 function simplex_solve!(B, LP)
     done = false
     while !done
@@ -103,7 +113,9 @@ function simplex_solve!(B, LP)
     return B
 end
 
-# Simplex solver when initial partition is unknown
+"""
+Simplex solver when initial partition is unknown
+"""
 function simplex_solve(LP)
     A, b, = LP.A, LP.b
 
@@ -135,6 +147,9 @@ function simplex_solve(LP)
     return get_vertex(B, LP)[1:n]
 end
 
+"""
+For verifying optimality of solutions
+"""
 function dual_certificate(LP, x, λ, ϵ=1e-6)
     A, b, c = LP.A, LP.b, LP.c
 

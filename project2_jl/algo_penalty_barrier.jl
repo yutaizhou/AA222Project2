@@ -15,7 +15,7 @@ function penalty_method(M, f, ∇f, c, penalties, x, outer_max_iters, inner_max_
         if penalties[1](x, c) == 0 # this assumes the first penalty function is count-based penalty
             break
         end
-        (i < outer_max_iters) && pop!(x_hist)
+        # (i < outer_max_iters) && pop!(x_hist)
     end
     return x, x_hist
 end

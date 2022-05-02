@@ -54,6 +54,17 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 15, "_"; weights=weights, multipliers=multipliers)
         return x
 
+        # d = length(x0)
+        # μ = copy(x0)
+        # Σ = 1 * ones(d,d)
+        # Σ[diagind(Σ)] .= 2
+
+        # method = CEM(pop_size=100, elite_size=20, P = MvNormal(μ, Σ))
+        # penalties = [penalty_l0, penalty_l2]
+        # weights = [1.5, 2.0]
+        # multipliers = [2.0, 2.0]
+        # x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 15, 5; weights=weights, multipliers=multipliers)
+        # return x
     elseif prob_name == "simple2"
         method = HookeJeevesDynamic(α=1.0, γ=0.5, ϵ=5e-1)
         penalties = [penalty_l0, penalty_l2]
@@ -62,6 +73,17 @@ function optimize(f, ∇f, c, x0, n, prob_name)
         x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 10, "_"; weights=weights, multipliers=multipliers)
         return x
 
+        # d = length(x0)
+        # μ = copy(x0)
+        # Σ = 2 * ones(d,d)
+        # Σ[diagind(Σ)] .= 5
+
+        # method = CEM(pop_size=72, elite_size=15, P = MvNormal(μ, Σ))
+        # penalties = [penalty_l0, penalty_l2]
+        # weights = [4.0, 4.0]
+        # multipliers = [2.0, 2.0]
+        # x, _ = penalty_method(method, f, ∇f, c, penalties, x0, 3, 3; weights=weights, multipliers=multipliers)
+        # return x
     elseif prob_name == "simple3"
         method = HookeJeevesDynamic(α=0.3, γ=0.3)
         penalties = [penalty_l0, penalty_l2]
